@@ -6,7 +6,7 @@ This is a command-line interface (CLI) utility built with Golang that automates 
 
 - **Multiple DBMS Support**: MySQL, PostgreSQL, MongoDB
 - **Backup Types**: Full, incremental, differential (customize based on DBMS)
-- **Scheduling**: Cron-based automatic backup scheduling
+- **Scheduling**: Predefined schedules (daily, weekly, monthly) and custom cron-based scheduling
 - **Compression**: Compress backup files for storage efficiency
 - **Storage Options**: Local storage, AWS S3, Google Cloud Storage (coming soon)
 - **Logging**: Track backup and restore operations
@@ -113,12 +113,40 @@ To perform a manual backup, use the `backup` command and specify the database ty
 
 ### 2. **Schedule a Backup**
 
-You can schedule automatic backups using the `schedule` command and providing a cron expression.
+You can schedule automatic backups using predefined schedules (`daily`, `weekly`, `monthly`) or a custom cron expression with the `schedule` command.
 
-#### Example: Schedule a Daily Backup at Midnight for MySQL
+#### Predefined Scheduling Options
+
+- **Daily**: Backup runs every day at midnight.
+- **Weekly**: Backup runs every Sunday at midnight.
+- **Monthly**: Backup runs on the first day of every month at midnight.
+
+#### Custom Schedule
+
+You can also define your own cron expression using the `--cron` flag if you want custom scheduling.
+
+#### Example: Daily Backup at Midnight for MySQL
 
 ```bash
-./db-backup-cli schedule --db-type=mysql --host=localhost --port=3306 --user=root --password=secret --db-name=mydb --backup-type=full --storage=local --compress --cron="0 0 * * *"
+./db-backup-cli schedule --db-type=mysql --host=localhost --port=3306 --user=root --password=secret --db-name=mydb --backup-type=full --storage=local --compress --schedule-type=daily
+```
+
+#### Example: Weekly Backup (Every Sunday at Midnight) for PostgreSQL
+
+```bash
+./db-backup-cli schedule --db-type=postgres --host=localhost --port=5432 --user=postgres --password=secret --db-name=mydb --backup-type=full --storage=local --schedule-type=weekly
+```
+
+#### Example: Monthly Backup (First Day of Each Month at Midnight) for MongoDB
+
+```bash
+./db-backup-cli schedule --db-type=mongodb --host=localhost --port=27017 --user=mongoUser --password=mongoPass --db-name=mydb --backup-type=full --storage=local --schedule-type=monthly
+```
+
+#### Example: Custom Backup Schedule (Every Monday at 1 PM) for MySQL
+
+```bash
+./db-backup-cli schedule --db-type=mysql --host=localhost --port=3306 --user=root --password=secret --db-name=mydb --backup-type=full --storage=local --compress --schedule-type=custom --cron="0 13 * * 1"
 ```
 
 ### 3. **Restore a Backup**
@@ -142,7 +170,8 @@ To restore a database from a backup file, use the `restore` command.
 - `--backup-type`: Type of backup (`full`, `incremental`, `differential`).
 - `--storage`: Where to store the backup (`local`, `aws`, `gcp`).
 - `--compress`: Whether to compress the backup file.
-- `--cron`: Cron expression for scheduling.
+- `--schedule-type`: Predefined schedule types (`daily`, `weekly`, `monthly`, `custom`).
+- `--cron`: Cron expression for custom scheduling.
 - `--backup-file`: Path to the backup file for restoration.
 
 ## Logging
@@ -166,4 +195,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-Let me know if you need further customizations or clarifications for the README file!
+Let me know if you need any more adjustments to this **README.md** file or if there’s anything else you want to modify!
